@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "181440545501",
+    "project_id": "andes-mobile",
+    "storage_bucket": "andes-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181440545501:android:f0aaf4a7e7bb75e74ed134",
+        "android_client_info": {
+          "package_name": "unicamp.fabio.andes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181440545501-6ohlujgp1u879i7ni12acdundp8g4va8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDx0KleB-Yi5DRlze1wo-cQolc-CVadSyU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181440545501-6ohlujgp1u879i7ni12acdundp8g4va8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
