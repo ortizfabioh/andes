@@ -22,9 +22,7 @@ class _MainRegistryState extends State<MainRegistry> {
     return BlocBuilder<ManageFirebaseBloc, ManageState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text("Cadastro de usuário"),
-          ),
+          appBar: AppBar(title: Text("Cadastro de usuário"),),
           body: SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -32,8 +30,9 @@ class _MainRegistryState extends State<MainRegistry> {
                 fullNameTextField(),
                 addressTextField(),
                 Column(children: [
-                  Text("Selecione seu estado:", style: TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.bold)),
+                  Text("Selecione seu estado:",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+                  ),
                   Row(children: [
                     Row(children: [stateRadio(1), Text("SP")]),
                     Row(children: [stateRadio(2), Text("RJ")]),
@@ -182,10 +181,10 @@ class _MainRegistryState extends State<MainRegistry> {
 
   snackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Usuário \'${registry.username}\' cadastrado com sucesso!"),
-          duration: Duration(seconds: 2),
-        )
+      SnackBar(
+        content: Text("Usuário \'${registry.username}\' cadastrado com sucesso!"),
+        duration: Duration(seconds: 2),
+      )
     );
   }
 }

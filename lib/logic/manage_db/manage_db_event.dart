@@ -4,8 +4,8 @@ import 'package:andes/model/registry.dart';
 abstract class ManageEvent {}
 
 class DeleteEvent extends ManageEvent {
-  var productId;
-  DeleteEvent({this.productId});
+  var id;
+  DeleteEvent({this.id});
 }
 
 class UpdateRequest extends ManageEvent {

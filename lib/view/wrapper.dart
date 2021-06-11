@@ -12,11 +12,7 @@ class Wrapper extends StatelessWidget {
       create: (BuildContext context) => MonitorBloc(),
       child: BlocConsumer<AuthBloc, AuthState>(
         builder: (BuildContext context, AuthState state) {
-          if(state is Authenticated) {
-            return NavigationLayoutLogged();
-          } else {
-            return NavigationLayoutNotLogged();
-          }
+          return (state is Authenticated) ? NavigationLayoutLogged() :  NavigationLayoutNotLogged();
         },
         listener: (context, state) {
           if(state is AuthError) {
@@ -26,12 +22,14 @@ class Wrapper extends StatelessWidget {
                 return AlertDialog(
                   title: Text("Erro no servidor"),
                   content: Text("${state.message}"),
-                  actions: [ElevatedButton(
-                    child: Text("OK"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )],
+                  actions: [
+                    ElevatedButton(
+                      child: Text("OK"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
                 );
               }
             );

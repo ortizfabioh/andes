@@ -1,4 +1,5 @@
 import 'package:andes/logic/manage_db/manage_db_event.dart';
+import 'package:andes/logic/manage_db/manage_db_state.dart';
 import 'package:andes/logic/manage_db/manage_local_db_bloc.dart';
 import 'package:andes/logic/monitor_db/monitor_db_bloc.dart';
 import 'package:andes/logic/monitor_db/monitor_db_state.dart';
@@ -21,8 +22,6 @@ class _MainCartState extends State<MainCart> {
   }
 
   Widget listView(productList, idList) {
-    print("productList: $productList");
-    print("idList: $idList");
     if(productList.length == 0) {
       return Container(
         child: Text("Não há produtos no carrinho no momento",
@@ -46,20 +45,16 @@ class _MainCartState extends State<MainCart> {
                   Text("${productList[index].name}",
                     style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  Text(
-                    "\$ ${productList[index].price}",
+                  Text("\$ ${productList[index].price}",
                     style: TextStyle(color: Colors.white, fontSize: 14),
                   )
                 ]
               ),
-              leading: Image.asset(
-                '${productList[index].imageSmall}',
-                height: 40,
-              ),
+              leading: Image.asset('${productList[index].imageSmall}', height: 40),
               trailing: GestureDetector(
                 child: Icon(Icons.delete),
                 onTap: () {
-                  BlocProvider.of<ManageLocalBloc>(context).add(DeleteEvent(productId: idList[index]));
+                  BlocProvider.of<ManageLocalBloc>(context).add(DeleteEvent(id: idList[index]));
                 },
               )
             );
@@ -67,9 +62,15 @@ class _MainCartState extends State<MainCart> {
         ),
         Row(children: [
           Text("Total: $total   ",
-              style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold)
+            style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold
+            )
           ),
-          RaisedButton(child: Text("Finalizar compra"), color: Colors.green, onPressed: () {},)
+          RaisedButton(child: Text("Finalizar compra"),
+            color: Colors.green,
+            onPressed: () {
+              // NÃO SERÁ IMPLEMENTADO
+            },
+          )
         ])
       ]);
     }

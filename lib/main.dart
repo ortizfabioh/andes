@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthBloc>(
-      create: (context) =>AuthBloc(),
+      create: (context) => AuthBloc(),
       child: MaterialApp(
         theme: ThemeData(
           primarySwatch: Colors.brown,
