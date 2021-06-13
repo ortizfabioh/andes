@@ -22,21 +22,17 @@ class MainLoginState extends State<MainLogin> {
     return SingleChildScrollView(
       child: Form(
         key: formKey,
-        child: Column(
-          children: [
-            usernameFormField(),
-            passwordFormField(),
-            Row(
-              children: [
-                rememberMeFormField(),
-                Text("Lembrar senha"),
-              ],
-            ),
-            Text("Não possui uma conta?", style: TextStyle(fontSize: 15)),
-            registerButton(),
-            submitButton(),
-          ],
-        ),
+        child: Column(children: [
+          usernameFormField(),
+          passwordFormField(),
+          Row(children: [
+            rememberMeFormField(),
+            Text("Lembrar senha"),
+          ]),
+          Text("Não possui uma conta?", style: TextStyle(fontSize: 15)),
+          registerButton(),
+          submitButton(),
+        ]),
       ),
     );
   }
@@ -44,15 +40,14 @@ class MainLoginState extends State<MainLogin> {
   Widget usernameFormField() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
-      validator: (String inValue) {
-        return (inValue.length == 0) ? "Insira seu nome de usuário" : null;
-      },
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Insira seu nome de usuário" : null,
       onSaved: (String inValue) {
         login.username = inValue;
       },
       decoration: InputDecoration(
-          hintText: "Nome de usuário",
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        hintText: "Usuário (E-mail)",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
@@ -60,9 +55,8 @@ class MainLoginState extends State<MainLogin> {
   Widget passwordFormField() {
     return TextFormField(
       obscureText: true,
-      validator: (String inValue) {
-        return (inValue.length == 0) ? "Senha inválida" : null;
-      },
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Senha inválida" : null,
       onSaved: (String inValue) {
         login.password = inValue;
       },
@@ -87,11 +81,11 @@ class MainLoginState extends State<MainLogin> {
   Widget registerButton() {
     return TextButton(
       onPressed: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return BlocProvider(create: (_) => ManageFirebaseBloc(),
+        Navigator.push(context, MaterialPageRoute(builder: (context)
+          => BlocProvider(create: (_) => ManageFirebaseBloc(),
             child: MainRegistry()
-          );
-        }));
+          )
+        ));
       },
       child: Text("Clique aqui para se cadastrar!",
         style: TextStyle(color: Colors.blue, fontSize: 15),
@@ -105,7 +99,6 @@ class MainLoginState extends State<MainLogin> {
       color: Colors.green,
       onPressed: () {
         if (formKey.currentState.validate()) {
-          NavigationLayoutLogged();
           formKey.currentState.save();
           BlocProvider.of<AuthBloc>(context).add(login);
         }

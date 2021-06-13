@@ -37,29 +37,25 @@ class FirebaseRemoteServer {
   }
 
   Future<List<dynamic>>getUserList() async {
-    QuerySnapshot snapshot = await userCollection.doc(uid).collection("my_data").get();
+    QuerySnapshot snapshot = await userCollection.get();
     return _userListFromSnapshot(snapshot);
   }
 
   insertUser(RegistryData user) async {
     await userCollection
-      .doc(uid)
-      .collection("my_data")
       .add({"fullName": user.fullName,
-        "address": user.address,
-        "state": user.state,
-        "phone": user.phone,
-        "username": user.username
-      });
+      "address": user.address,
+      "state": user.state,
+      "phone": user.phone,
+      "username": user.username
+    });
   }
 
 
   // STREAM
   Stream get stream {
     return userCollection
-        .doc(uid)
-        .collection("my_data")
-        .snapshots()
-        .map(_userListFromSnapshot);
+      .snapshots()
+      .map(_userListFromSnapshot);
   }
 }

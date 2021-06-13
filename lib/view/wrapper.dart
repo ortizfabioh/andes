@@ -19,9 +19,10 @@ class Wrapper extends StatelessWidget {
         BlocProvider(create: (_) => ManageFirebaseBloc()),
       ],
       child: BlocConsumer<AuthBloc, AuthState>(
-        builder: (BuildContext context, AuthState state) {
-          return (state is Authenticated) ? NavigationLayoutLogged() :  NavigationLayoutNotLogged();
-        },
+        builder: (context, state)
+          => (state is Authenticated)
+            ? NavigationLayoutLogged()
+            : NavigationLayoutNotLogged(),
         listener: (context, state) {
           if(state is AuthError) {
             showDialog(

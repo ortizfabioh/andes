@@ -56,9 +56,8 @@ class _MainRegistryState extends State<MainRegistry> {
   Widget fullNameTextField() {
     return TextFormField(
       keyboardType: TextInputType.name,
-      validator: (String inValue) {
-        return (inValue.length == 0) ? "Insira seu nome completo" : null;
-      },
+      validator: (String inValue) =>
+        (inValue.length == 0) ? "Insira seu nome completo" : null,
       onSaved: (String inValue) {
         registry.fullName = inValue;
       },
@@ -72,9 +71,8 @@ class _MainRegistryState extends State<MainRegistry> {
   Widget addressTextField() {
     return TextFormField(
       keyboardType: TextInputType.streetAddress,
-      validator: (String inValue) {
-        return (inValue.length == 0) ? "Insira seu endereco" : null;
-      },
+      validator: (String inValue) =>
+        (inValue.length == 0) ? "Insira um endereco" : null,
       onSaved: (String inValue) {
         registry.address = inValue;
       },
@@ -100,9 +98,8 @@ class _MainRegistryState extends State<MainRegistry> {
   Widget phoneTextField() {
     return TextFormField(
       keyboardType: TextInputType.phone,
-      validator: (String inValue) {
-        return (inValue.length == 0) ? "Insira seu número de telefone" : null;
-      },
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Insira um número de telefone" : null,
       onSaved: (String inValue) {
         registry.phone = inValue;
       },
@@ -116,9 +113,8 @@ class _MainRegistryState extends State<MainRegistry> {
   Widget emailTextField() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
-      validator: (String inValue) {
-        return (inValue.length == 0) ? "Insira seu E-mail" : null;
-      },
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Insira um E-mail" : null,
       onSaved: (String inValue) {
         registry.email = inValue;
         authData.username = inValue;
@@ -133,9 +129,8 @@ class _MainRegistryState extends State<MainRegistry> {
   Widget usernameTextField() {
     return TextFormField(
       keyboardType: TextInputType.name,
-      validator: (String inValue) {
-        return (inValue.length == 0) ? "Insira seu nome de usuário" : null;
-      },
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Insira um nome de usuário" : null,
       onSaved: (String inValue) {
         registry.username = inValue;
       },
@@ -148,9 +143,8 @@ class _MainRegistryState extends State<MainRegistry> {
   Widget passwordFormField() {
     return TextFormField(
       obscureText: true,
-      validator: (String inValue) {
-        return null;
-      },
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Insira uma senha" : null,
       onSaved: (String inValue) {
         registry.password = inValue;
         authData.password = inValue;
@@ -166,7 +160,7 @@ class _MainRegistryState extends State<MainRegistry> {
       child: Text("Entrar"),
       color: Colors.blue,
       onPressed: () {
-        if (formKey.currentState.validate()) {
+        if(formKey.currentState.validate()) {
           BlocProvider.of<ManageFirebaseBloc>(context).add(SubmitEventUser(user: registry));
           BlocProvider.of<AuthBloc>(context).add(authData);
 

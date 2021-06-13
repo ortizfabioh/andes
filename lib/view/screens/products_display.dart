@@ -34,16 +34,12 @@ class MainProducts extends StatelessWidget {
                         Text("${productList[index].name}",
                           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
                         ),
-                        Text(
-                          "\$ ${productList[index].price}",
+                        Text("\$ ${productList[index].price}",
                           style: TextStyle(color: Colors.white, fontSize: 14),
                         )
                       ]
                     ),
-                    leading: Image.asset(
-                      '${productList[index].imageSmall}',
-                        height: 40,
-                    ),
+                    leading: Image.asset('${productList[index].imageSmall}', height: 40,),
                     trailing: GestureDetector(
                       child: Icon(Icons.add_shopping_cart_sharp),
                       onTap: () {
@@ -58,9 +54,7 @@ class MainProducts extends StatelessWidget {
                     onTap: () {
                       showBottomSheet(
                         context: context,
-                        builder: (_) {
-                          return detailPage(context, ctx, productList[index], state);
-                        }
+                        builder: (_) => detailPage(context, ctx, productList[index], state)
                       );
                     },
                   ),
@@ -75,38 +69,39 @@ class MainProducts extends StatelessWidget {
 
   Widget detailPage(context, ctx, product, state) {
     return SingleChildScrollView(
-      child: Expanded(
-        child: Column(children: [
-          Image.asset('${product.imageBig}', height: 250,),
-          Text("${product.name}",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 35),
-          ),
-          Text("Por \$${product.price}",
-            style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          Divider(),
-          Text("${product.description}",
-            style: TextStyle(color: Colors.black, fontSize: 20),
-          ),
-          ElevatedButton(
-            child: Text("Adicionar ao carrinho"),
-            onPressed: () {
-              if(state is Authenticated) {
-                snackBar(context);
-                addCart(ctx, product);
-              } else {
-                loginDialog(context);
-              }
-            },
-          ),
-        ]),
-      ),
+      child: Column(children: [
+        Image.asset('${product.imageBig}', height: 250,),
+        Text("${product.name}",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 35),
+        ),
+        Text("Por \$${product.price}",
+          style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        Divider(),
+        Text("${product.description}",
+          style: TextStyle(color: Colors.black, fontSize: 20),
+        ),
+        ElevatedButton(
+          child: Text("Adicionar ao carrinho"),
+          onPressed: () {
+            if(state is Authenticated) {
+              snackBar(context);
+              addCart(ctx, product);
+            } else {
+              loginDialog(context);
+            }
+          },
+        ),
+      ]),
     );
   }
 
   snackBar(context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Adicionado ao carrinho"), duration: Duration(milliseconds: 500))
+      SnackBar(
+        content: Text("Adicionado ao carrinho"),
+        duration: Duration(milliseconds: 500)
+      )
     );
   }
 
@@ -132,6 +127,5 @@ class MainProducts extends StatelessWidget {
 }
 
 addCart(context, product) {
-  print("${product.name}");
   BlocProvider.of<ManageLocalBloc>(context).add(SubmitEvent(product));
 }

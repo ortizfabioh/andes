@@ -6,6 +6,7 @@ import 'package:andes/view/screens/cart_main.dart';
 import 'package:andes/view/screens/login_main.dart';
 import 'package:andes/view/screens/products_display.dart';
 import 'package:andes/view/screens/profile_main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,8 +60,9 @@ class NavigationLayoutLogged extends StatelessWidget {
 class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ManageFirebaseBloc, ManageState>(
-      builder: (context, state) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection("user").snapshots(),
+      builder: (context, snapshot) {
         return Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -73,11 +75,11 @@ class MyDrawer extends StatelessWidget {
                     text: TextSpan(children: [
                       TextSpan(
                         //text: "User's full name\n",
-                        text: "$state\n",
+                        text: "${snapshot.data.docs[0]["fullName"]}\n",
                         style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: Colors.black87, fontSize: 16)
                       ),
                       TextSpan(
-                        text: "@username",
+                        text: "@${snapshot.data.docs[0]["username"]}",
                         style: TextStyle(fontFamily: 'Montserrat', color: Colors.black54, fontSize: 14)
                       ),
                     ])
