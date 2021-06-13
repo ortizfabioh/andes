@@ -1,7 +1,7 @@
 import 'package:andes/logic/manage_auth/auth_bloc.dart';
 import 'package:andes/logic/manage_auth/auth_event.dart';
-import 'package:andes/logic/monitor_db/monitor_db_bloc.dart';
-import 'package:andes/logic/monitor_db/monitor_db_state.dart';
+import 'package:andes/logic/manage_db/manage_db_state.dart';
+import 'package:andes/logic/manage_db/manage_firebase_db_bloc.dart';
 import 'package:andes/view/screens/cart_main.dart';
 import 'package:andes/view/screens/login_main.dart';
 import 'package:andes/view/screens/products_display.dart';
@@ -59,7 +59,7 @@ class NavigationLayoutLogged extends StatelessWidget {
 class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MonitorBloc, MonitorState>(
+    return BlocBuilder<ManageFirebaseBloc, ManageState>(
       builder: (context, state) {
         return Drawer(
           child: ListView(
@@ -72,20 +72,13 @@ class MyDrawer extends StatelessWidget {
                   RichText(
                     text: TextSpan(children: [
                       TextSpan(
-                        text: "User's Full Name\n",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Montserrat',
-                          color: Colors.black87,
-                          fontSize: 16)
-                        ),
+                        //text: "User's full name\n",
+                        text: "$state\n",
+                        style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Montserrat', color: Colors.black87, fontSize: 16)
+                      ),
                       TextSpan(
                         text: "@username",
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: Colors.black54,
-                          fontSize: 14
-                        )
+                        style: TextStyle(fontFamily: 'Montserrat', color: Colors.black54, fontSize: 14)
                       ),
                     ])
                   ),

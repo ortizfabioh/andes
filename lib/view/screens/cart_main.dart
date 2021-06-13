@@ -1,8 +1,8 @@
 import 'package:andes/logic/manage_db/manage_db_event.dart';
-import 'package:andes/logic/manage_db/manage_db_state.dart';
 import 'package:andes/logic/manage_db/manage_local_db_bloc.dart';
 import 'package:andes/logic/monitor_db/monitor_db_bloc.dart';
 import 'package:andes/logic/monitor_db/monitor_db_state.dart';
+import 'package:andes/logic/monitor_db/monitor_local_db_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +14,7 @@ class MainCart extends StatefulWidget {
 class _MainCartState extends State<MainCart> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MonitorBloc, MonitorState>(
+    return BlocBuilder<MonitorLocalBloc, MonitorState>(
       builder: (context, state) {
         return listView(state.productList, state.idList);
       }
@@ -22,6 +22,7 @@ class _MainCartState extends State<MainCart> {
   }
 
   Widget listView(productList, idList) {
+    print("idList: $idList");
     if(productList.length == 0) {
       return Container(
         child: Text("Não há produtos no carrinho no momento",
@@ -34,45 +35,69 @@ class _MainCartState extends State<MainCart> {
       for(var product in productList) {
         total += product.price;
       }
-      return Column(children: [
-        ListView.builder(
-          itemCount: productList.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("${productList[index].name}",
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  Text("\$ ${productList[index].price}",
-                    style: TextStyle(color: Colors.white, fontSize: 14),
-                  )
-                ]
+      return CustomScrollView(
+        slivers: [
+          SliverList(
+            delegate: SliverChildListDelegate([
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: productList.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("${productList[index].name}",
+                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        Text("\$ ${productList[index].price}",
+                          style: TextStyle(color: Colors.grey[700], fontSize: 14),
+                        )
+                      ]
+                    ),
+                    leading: Image.asset('${productList[index].imageSmall}', height: 40),
+                    trailing: GestureDetector(
+                      child: Icon(Icons.delete),
+                      onTap: () {
+                        BlocProvider.of<ManageLocalBloc>(context).add(DeleteEvent(id: idList[index]));
+                      },
+                    )
+                  );
+                }
               ),
-              leading: Image.asset('${productList[index].imageSmall}', height: 40),
-              trailing: GestureDetector(
-                child: Icon(Icons.delete),
-                onTap: () {
-                  BlocProvider.of<ManageLocalBloc>(context).add(DeleteEvent(id: idList[index]));
-                },
-              )
-            );
-          }
-        ),
-        Row(children: [
-          Text("Total: $total   ",
-            style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold
-            )
+            ]),
           ),
-          RaisedButton(child: Text("Finalizar compra"),
-            color: Colors.green,
-            onPressed: () {
-              // NÃO SERÁ IMPLEMENTADO
-            },
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Row(children: [
+                Text("Total: $total  ",
+                  style: (TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 26)),
+                ),
+                RaisedButton(
+                  child: Text("Finalizar compra"),
+                  color: Colors.green,
+                  onPressed: () { /* Will not be implemented for this project */ },
+                )
+              ]),
+            )
           )
-        ])
-      ]);
+        ]
+      );
     }
   }
 }
+
+/*
+* Row(children: [
+              Text("Total: $total  ",
+                style: (TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 26)),
+              ),
+              RaisedButton(
+                child: Text("Finalizar compra"),
+                color: Colors.green,
+                onPressed: () { /* Will not be implemented for this project */ },
+              )
+            ])
+* */

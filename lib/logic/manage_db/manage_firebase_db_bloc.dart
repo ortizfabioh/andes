@@ -11,8 +11,9 @@ class ManageFirebaseBloc extends Bloc<ManageEvent, ManageState> {
     if(event is SubmitEventUser) {
       if (state is InsertState) {
         FirebaseRemoteServer.helper.insertUser(event.user);
-      } else {
+      } else if(state is UpdateStateUser) {
         FirebaseRemoteServer.helper.getUserList();
+        yield UpdateStateUser();
       }
     }
   }

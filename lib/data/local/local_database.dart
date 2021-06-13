@@ -23,7 +23,7 @@ class DatabaseLocalServer {
 
   Future<Database> initializeDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    String path = directory.path+"products.db";
+    String path = directory.path+"$table.db";
 
     var productsDatabase = await openDatabase(path, version: 1, onCreate: _createDb);
     return productsDatabase;
@@ -31,11 +31,13 @@ class DatabaseLocalServer {
 
   _createDb(Database db, int newVersion) async {
     await db.execute(
-        "Create table $table ("
-            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-            "name TEXT, "
-            "price INTEGER,"
-            "imageSmall TEXT)"
+      "CREATE TABLE $table ("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "name TEXT,"
+        "description TEXT,"
+        "price INTEGER,"
+        "imageBig TEXT,"
+        "imageSmall TEXT)"
     );
   }
 
