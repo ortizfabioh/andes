@@ -28,9 +28,7 @@ class FirebaseAuthenticationService {
       email: email, password: password
     );
     User user = authResult.user;
-
     FirebaseRemoteServer.helper.includeUserData(user.uid, fullName, address, state, phone, username);
-
     return UserModel(user.uid);
   }
 

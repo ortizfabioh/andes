@@ -18,7 +18,7 @@ class MainProducts extends StatelessWidget {
 
   Widget listView(productList, idList) {
     return BlocBuilder<AuthBloc, AuthState>(
-      builder: (BuildContext ctx, AuthState state) {
+      builder: (ctx, state) {
         return BlocBuilder<ManageLocalBloc, ManageState>(
           builder: (ctx, stt) {
             return ListView.builder(
@@ -75,7 +75,7 @@ class MainProducts extends StatelessWidget {
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 35),
         ),
         Text("\$ ${product.price}",
-          style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 20),
+          style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 28),
         ),
         Divider(),
         Text("${product.description}",

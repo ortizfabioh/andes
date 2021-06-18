@@ -68,7 +68,7 @@ class _MainCartState extends State<MainCart> {
             alignment: Alignment.bottomCenter,
             child: Row(children: [
               Text("Total: \$$total.00  ",
-                style: (TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 26)),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 26),
               ),
               RaisedButton(
                 child: Text("Proceed to payment"),

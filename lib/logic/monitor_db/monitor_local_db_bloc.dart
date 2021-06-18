@@ -7,21 +7,18 @@ import 'package:andes/model/product.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MonitorLocalBloc extends Bloc<MonitorEvent, MonitorState> {
-  StreamSubscription _localSubscription;  // produtos adicionados no carrinho
+  StreamSubscription _localSubscription;
 
-  List<ProductData> localProductList;
-  List<int> localIdList;
+  List<ProductData> productList;
+  List<int> idList;
 
   MonitorLocalBloc() : super(MonitorState(productList: [], idList: [])) {
     add(AskNewList());
     _localSubscription = DatabaseLocalServer.helper.stream.listen((response) {
       try {
-        localProductList = response[0];
-        localIdList = response[1];
-        add(UpdateList(
-          productList: localProductList,
-          idList: localIdList
-        ));
+        productList = response[0];
+        idList = response[1];
+        add(UpdateList(productList: productList, idList: idList));
       } catch(e) {}
     });
   }
@@ -31,12 +28,10 @@ class MonitorLocalBloc extends Bloc<MonitorEvent, MonitorState> {
     if(event is AskNewList) {
       var localResponse = await DatabaseLocalServer.helper.getItemList();
 
-      localProductList = localResponse[0];
-      localIdList = localResponse[1];
-      yield MonitorState(
-        productList: localProductList,
-        idList: localIdList
-      );
+      productList = localResponse[0];
+      idList = localResponse[1];
+
+      yield MonitorState(productList: productList, idList: idList);
     } else if(event is UpdateList) {
       yield MonitorState(idList: event.idList, productList: event.productList);
     }

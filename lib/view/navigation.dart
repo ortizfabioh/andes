@@ -1,15 +1,8 @@
-import 'package:andes/auth_provider/firebase_auth.dart';
 import 'package:andes/logic/manage_auth/auth_bloc.dart';
 import 'package:andes/logic/manage_auth/auth_event.dart';
-import 'package:andes/logic/manage_db/manage_db_event.dart';
-import 'package:andes/logic/manage_db/manage_db_state.dart';
-import 'package:andes/logic/manage_db/manage_firebase_db_bloc.dart';
-import 'package:andes/model/registry.dart';
-import 'package:andes/model/user.dart';
 import 'package:andes/view/screens/cart_main.dart';
 import 'package:andes/view/screens/login_main.dart';
 import 'package:andes/view/screens/products_display.dart';
-import 'package:andes/view/screens/profile_main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

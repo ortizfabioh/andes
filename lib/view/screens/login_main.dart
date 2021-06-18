@@ -56,7 +56,7 @@ class MainLoginState extends State<MainLogin> {
     return TextFormField(
       obscureText: _passwordVisible,
       validator: (String inValue)
-        => (inValue.length == 0) ? "Incorrect password" : null,
+        => (inValue.length == 0) ? "Insert a password" : null,
       onSaved: (String inValue) {
         login.password = inValue;
       },
@@ -109,7 +109,7 @@ class MainLoginState extends State<MainLogin> {
       child: Text("Log in"),
       color: Colors.green,
       onPressed: () {
-        if (formKey.currentState.validate()) {
+        if(formKey.currentState.validate()) {
           formKey.currentState.save();
           BlocProvider.of<AuthBloc>(context).add(login);
         }

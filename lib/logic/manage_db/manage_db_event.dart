@@ -11,14 +11,12 @@ class DeleteEvent extends ManageEvent {
 class UpdateRequest extends ManageEvent {
   int productId;
   ProductData previousProduct;
-
   UpdateRequest({this.productId, this.previousProduct});
 }
 
 class UpdateRequestUser extends ManageEvent {
   String userId;
   RegistryData previousUser;
-
   UpdateRequestUser({this.userId, this.previousUser});
 }
 

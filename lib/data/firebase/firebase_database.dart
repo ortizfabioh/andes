@@ -54,7 +54,7 @@ class FirebaseRemoteServer {
       .catchError((e) => print("Error on ADD: $e"));
   }
 
-  updateUser(String userId, RegistryData user) async {
+  updateUser(RegistryData user) async {
     await userCollection
       .doc(uid)
       .update({"fullName": user.fullName,

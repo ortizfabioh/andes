@@ -21,9 +21,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   @override
   Stream<AuthState> mapEventToState(AuthEvent event) async* {
     try {
-      if (event == null) {
+      if(event == null) {
         yield Unauthenticated();
-      } else if (event is RegisterUser) {
+      } else if(event is RegisterUser) {
         await _authenticationService.createUserWithEmailAndPassword(
             email: event.email,
             password: event.password,
@@ -34,18 +34,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             username: event.username
         );
       }
-      if (event is LoginUser) {
+      if(event is LoginUser) {
         await _authenticationService.signInWithEmailAndPassword(
             email: event.email, password: event.password
         );
-      } else if (event is InnerServerEvent) {
+      } else if(event is InnerServerEvent) {
         if(event.userModel == null) {
           yield Unauthenticated();
         } else {
           FirebaseRemoteServer.uid = event.userModel.uid;
           yield Authenticated(user:event.userModel);
         }
-      } else if (event is LogOut) {
+      } else if(event is LogOut) {
         await _authenticationService.signOut();
       }
     } catch(e) {

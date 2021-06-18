@@ -1,9 +1,7 @@
 import 'package:andes/logic/manage_auth/auth_bloc.dart';
 import 'package:andes/logic/manage_auth/auth_event.dart';
-import 'package:andes/logic/manage_db/manage_db_event.dart';
 import 'package:andes/logic/manage_db/manage_db_state.dart';
 import 'package:andes/logic/manage_db/manage_firebase_db_bloc.dart';
-import 'package:andes/model/registry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -56,8 +54,8 @@ class _MainRegistryState extends State<MainRegistry> {
   Widget fullNameTextField() {
     return TextFormField(
       keyboardType: TextInputType.name,
-      validator: (String inValue) =>
-        (inValue.length == 0) ? "Insert your full name" : null,
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Insert your full name" : null,
       onSaved: (String inValue) {
         authData.fullName = inValue;
       },
@@ -71,8 +69,8 @@ class _MainRegistryState extends State<MainRegistry> {
   Widget addressTextField() {
     return TextFormField(
       keyboardType: TextInputType.streetAddress,
-      validator: (String inValue) =>
-        (inValue.length == 0) ? "Insert your address" : null,
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Insert your address" : null,
       onSaved: (String inValue) {
         authData.address = inValue;
       },

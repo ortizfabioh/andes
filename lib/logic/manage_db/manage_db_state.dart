@@ -6,14 +6,12 @@ abstract class ManageState {}
 class UpdateState extends ManageState {
   int productId;
   ProductData previousProduct;
-
   UpdateState({this.productId, this.previousProduct});
 }
 
 class UpdateStateUser extends ManageState {
   var userId;
   RegistryData previousUser;
-
   UpdateStateUser({this.userId, this.previousUser});
 }
 

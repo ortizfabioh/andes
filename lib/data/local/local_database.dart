@@ -6,12 +6,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseLocalServer {
-  // Creating Singleton
   static DatabaseLocalServer helper = DatabaseLocalServer._createInstance();
   DatabaseLocalServer._createInstance();
 
   static Database _database;
-
   String table = "products";
 
   Future<Database> get database async {
@@ -76,7 +74,7 @@ class DatabaseLocalServer {
     return result;
   }
 
-  /********** STREAMS ************/
+  ///********** STREAMS ************/
 
   notify() async {
     if(_controller != null) {

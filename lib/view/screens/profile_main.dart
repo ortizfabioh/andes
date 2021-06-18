@@ -1,5 +1,3 @@
-import 'package:andes/auth_provider/firebase_auth.dart';
-import 'package:andes/data/firebase/firebase_database.dart';
 import 'package:andes/logic/manage_db/manage_db_event.dart';
 import 'package:andes/logic/manage_db/manage_db_state.dart';
 import 'package:andes/logic/manage_db/manage_firebase_db_bloc.dart';
@@ -30,8 +28,8 @@ class _MainProfileState extends State<MainProfile> {
             builder: (ctx, snapshot) {
               Map<String, dynamic> data = snapshot.data.data() as Map<String, dynamic>;
               BlocProvider.of<ManageFirebaseBloc>(context).add(UpdateRequestUser(
-                  userId: userAuth.uid,
-                  previousUser: RegistryData.fromMap(data)
+                userId: userAuth.uid,
+                previousUser: RegistryData.fromMap(data)
               ));
               RegistryData user = (state is UpdateStateUser) ? state.previousUser : new RegistryData();
               return SingleChildScrollView(
@@ -42,12 +40,14 @@ class _MainProfileState extends State<MainProfile> {
                       fullNameTextField(data, user),
                       addressTextField(data, user),
                       Column(children: [
-                        Text("Select the state you live in:", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                        Text("Select the state you live in:",
+                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+                        ),
                         Row(children: [
-                          Row(children: [stateRadio(1, data, user), Text("SP")]),
-                          Row(children: [stateRadio(2, data, user), Text("RJ")]),
-                          Row(children: [stateRadio(3, data, user), Text("MG")]),
-                          Row(children: [stateRadio(4, data, user), Text("ES")]),
+                          Row(children: [stateRadio(1, user), Text("SP")]),
+                          Row(children: [stateRadio(2, user), Text("RJ")]),
+                          Row(children: [stateRadio(3, user), Text("MG")]),
+                          Row(children: [stateRadio(4, user), Text("ES")]),
                         ]),
                       ]),
                       phoneTextField(data, user),
@@ -70,8 +70,8 @@ class _MainProfileState extends State<MainProfile> {
     return TextFormField(
       keyboardType: TextInputType.name,
       initialValue: "${data['fullName']}",
-      validator: (String inValue) =>
-      (inValue.length == 0) ? "Insert your full name" : null,
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Insert your full name" : null,
       onSaved: (String inValue) {
         user.fullName = inValue;
       },
@@ -98,7 +98,7 @@ class _MainProfileState extends State<MainProfile> {
     );
   }
 
-  Widget stateRadio(int value, Map<String, dynamic> data, RegistryData user) {
+  Widget stateRadio(int value, RegistryData user) {
     return Radio(
       value: value,
       groupValue: user.state,
@@ -148,7 +148,7 @@ class _MainProfileState extends State<MainProfile> {
       keyboardType: TextInputType.name,
       initialValue: "${data['username']}",
       validator: (String inValue)
-      => (inValue.length == 0) ? "Insert your username" : null,
+        => (inValue.length == 0) ? "Insert your username" : null,
       onSaved: (String inValue) {
         user.username = inValue;
       },
@@ -191,7 +191,6 @@ class _MainProfileState extends State<MainProfile> {
       color: Colors.blue,
       onPressed: () {
         if (formKey.currentState.validate()) {
-          print(user.username);
           BlocProvider.of<ManageFirebaseBloc>(context).add(SubmitEventUser(user: user));
 
           formKey.currentState.save();

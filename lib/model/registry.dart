@@ -1,7 +1,7 @@
 class RegistryData {
   String _fullName;
   String _address;
-  int _state;
+  int    _state;
   String _phone;
   String _email;
   String _username;
@@ -9,10 +9,10 @@ class RegistryData {
 
   RegistryData() {
     _fullName = "";
-    _address = "";
-    _state = 1;
-    _phone = "";
-    _email = "";
+    _address  = "";
+    _state    = 1;
+    _phone    = "";
+    _email    = "";
     _username = "";
     _password = "";
   }
@@ -28,10 +28,10 @@ class RegistryData {
   }
 
   String get fullName => _fullName;
-  String get address => _address;
-  int get state => _state;
-  String get phone => _phone;
-  String get email => _email;
+  String get address  => _address;
+  int    get state    => _state;
+  String get phone    => _phone;
+  String get email    => _email;
   String get username => _username;
   String get password => _password;
 
@@ -80,10 +80,10 @@ class RegistryData {
   toMap() {
     var map = Map<String, dynamic>();
     map["fullName"] = _fullName;
-    map["address"] = _address;
-    map["state"] = _state;
-    map["phone"] = _phone;
-    map["email"] = _email;
+    map["address"]  = _address;
+    map["state"]    = _state;
+    map["phone"]    = _phone;
+    map["email"]    = _email;
     map["username"] = _username;
     map["password"] = _password;
     return map;
