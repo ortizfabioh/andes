@@ -15,6 +15,13 @@ class UpdateRequest extends ManageEvent {
   UpdateRequest({this.productId, this.previousProduct});
 }
 
+class UpdateRequestUser extends ManageEvent {
+  String userId;
+  RegistryData previousUser;
+
+  UpdateRequestUser({this.userId, this.previousUser});
+}
+
 class SubmitEvent extends ManageEvent {
   ProductData product;
   SubmitEvent(this.product);

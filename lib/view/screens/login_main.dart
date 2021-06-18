@@ -1,7 +1,6 @@
 import 'package:andes/logic/manage_auth/auth_bloc.dart';
 import 'package:andes/logic/manage_auth/auth_event.dart';
 import 'package:andes/logic/manage_db/manage_firebase_db_bloc.dart';
-import 'package:andes/view/navigation.dart';
 import 'package:andes/view/screens/registry_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +15,7 @@ class MainLogin extends StatefulWidget {
 class MainLoginState extends State<MainLogin> {
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   final LoginUser login = new LoginUser();
+  bool _passwordVisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +27,9 @@ class MainLoginState extends State<MainLogin> {
           passwordFormField(),
           Row(children: [
             rememberMeFormField(),
-            Text("Lembrar senha"),
+            Text("Remember password"),
           ]),
-          Text("Não possui uma conta?", style: TextStyle(fontSize: 15)),
+          Text("Doesn\'t have an account yet?", style: TextStyle(fontSize: 15)),
           registerButton(),
           submitButton(),
         ]),
@@ -41,12 +41,12 @@ class MainLoginState extends State<MainLogin> {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       validator: (String inValue)
-        => (inValue.length == 0) ? "Insira seu nome de usuário" : null,
+        => (inValue.length == 0) ? "Insert your username" : null,
       onSaved: (String inValue) {
-        login.username = inValue;
+        login.email = inValue;
       },
       decoration: InputDecoration(
-        hintText: "Usuário (E-mail)",
+        hintText: "User (E-mail)",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
@@ -54,25 +54,36 @@ class MainLoginState extends State<MainLogin> {
 
   Widget passwordFormField() {
     return TextFormField(
-      obscureText: true,
+      obscureText: _passwordVisible,
       validator: (String inValue)
-        => (inValue.length == 0) ? "Senha inválida" : null,
+        => (inValue.length == 0) ? "Incorrect password" : null,
       onSaved: (String inValue) {
         login.password = inValue;
       },
       decoration: InputDecoration(
-        hintText: "Senha",
+        hintText: "Password",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        suffixIcon: IconButton(
+          icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off,
+            color: Theme.of(context).primaryColorDark,
+          ),
+          onPressed: () {
+            setState(() {
+              _passwordVisible = !_passwordVisible;
+            });
+          },
+        ),
       ),
     );
   }
 
   Widget rememberMeFormField() {
+    bool state = true;
     return Checkbox(
-      value: true,
+      value: state,
       onChanged: (bool value) {
         setState(() {
-          value = !value;
+          state = !value;
         });
       },
     );
@@ -87,7 +98,7 @@ class MainLoginState extends State<MainLogin> {
           )
         ));
       },
-      child: Text("Clique aqui para se cadastrar!",
+      child: Text("Click here to register!",
         style: TextStyle(color: Colors.blue, fontSize: 15),
       ),
     );
@@ -95,7 +106,7 @@ class MainLoginState extends State<MainLogin> {
 
   Widget submitButton() {
     return RaisedButton(
-      child: Text("Entrar"),
+      child: Text("Log in"),
       color: Colors.green,
       onPressed: () {
         if (formKey.currentState.validate()) {

@@ -11,7 +11,7 @@ class UpdateState extends ManageState {
 }
 
 class UpdateStateUser extends ManageState {
-  String userId;
+  var userId;
   RegistryData previousUser;
 
   UpdateStateUser({this.userId, this.previousUser});

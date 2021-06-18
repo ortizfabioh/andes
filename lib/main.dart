@@ -1,4 +1,5 @@
 import 'package:andes/logic/manage_auth/auth_bloc.dart';
+import 'package:andes/logic/manage_db/manage_firebase_db_bloc.dart';
 import 'package:andes/view/navigation.dart';
 import 'package:andes/view/screens/profile_main.dart';
 import 'package:andes/view/wrapper.dart';
@@ -23,7 +24,11 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity),
         home: Wrapper(),
         routes: <String, WidgetBuilder>{
-          '/profile': (BuildContext context) => new MainProfile(),
+          '/profile': (BuildContext context)
+            => BlocProvider(
+              create: (_) => ManageFirebaseBloc(),
+              child: new MainProfile()
+            ),
         }
       ),
     );

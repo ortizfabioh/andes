@@ -6,7 +6,7 @@ class FirebaseRemoteServer {
   static FirebaseRemoteServer helper = FirebaseRemoteServer._createInstance();
   FirebaseRemoteServer._createInstance();
 
-  final CollectionReference userCollection = FirebaseFirestore.instance.collection("user");
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection("users");
 
   includeUserData(
     String uid,
@@ -43,18 +43,34 @@ class FirebaseRemoteServer {
 
   insertUser(RegistryData user) async {
     await userCollection
+      .doc(uid)
+      .collection("profile")
       .add({"fullName": user.fullName,
-      "address": user.address,
-      "state": user.state,
-      "phone": user.phone,
-      "username": user.username
-    });
+        "address": user.address,
+        "state": user.state,
+        "phone": user.phone,
+        "username": user.username})
+      .then((a) => print("INSERT successful"))
+      .catchError((e) => print("Error on ADD: $e"));
+  }
+
+  updateUser(String userId, RegistryData user) async {
+    await userCollection
+      .doc(uid)
+      .update({"fullName": user.fullName,
+        "address": user.address,
+        "state": user.state,
+        "phone": user.phone,
+        "username": user.username})
+      .then((a) => print("UPDATE successful"))
+      .catchError((e) => print("Error on UPDATE: $e"));
   }
 
 
-  // STREAM
   Stream get stream {
     return userCollection
+      .doc(uid)
+      .collection("profile")
       .snapshots()
       .map(_userListFromSnapshot);
   }

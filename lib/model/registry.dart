@@ -48,7 +48,7 @@ class RegistryData {
   }
 
   set state(int newState) {
-    if (newState > 0 && newState < 4) {
+    if (newState >= 1 && newState <= 4) {
       this._state = newState;
     }
   }

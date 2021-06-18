@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:andes/auth_provider/firebase_auth.dart';
+import 'package:andes/data/firebase/firebase_database.dart';
 import 'package:andes/logic/manage_auth/auth_event.dart';
 import 'package:andes/logic/manage_auth/auth_state.dart';
 import 'package:andes/model/user.dart';
@@ -22,23 +23,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       if (event == null) {
         yield Unauthenticated();
-      }
-      if (event is RegisterUser) {
+      } else if (event is RegisterUser) {
         await _authenticationService.createUserWithEmailAndPassword(
-            email: event.username, password: event.password
+            email: event.email,
+            password: event.password,
+            fullName: event.fullName,
+            address: event.address,
+            state: event.state,
+            phone: event.phone,
+            username: event.username
         );
-      } else if (event is LoginAnonymousUser) {
-        await _authenticationService.signInAnonymously();
       }
       if (event is LoginUser) {
         await _authenticationService.signInWithEmailAndPassword(
-            email: event.username, password: event.password
+            email: event.email, password: event.password
         );
       } else if (event is InnerServerEvent) {
-        if (event.userModel == null) {
+        if(event.userModel == null) {
           yield Unauthenticated();
         } else {
-          yield Authenticated(user: event.userModel);
+          FirebaseRemoteServer.uid = event.userModel.uid;
+          yield Authenticated(user:event.userModel);
         }
       } else if (event is LogOut) {
         await _authenticationService.signOut();

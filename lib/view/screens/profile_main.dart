@@ -1,5 +1,13 @@
+import 'package:andes/auth_provider/firebase_auth.dart';
+import 'package:andes/data/firebase/firebase_database.dart';
+import 'package:andes/logic/manage_db/manage_db_event.dart';
+import 'package:andes/logic/manage_db/manage_db_state.dart';
+import 'package:andes/logic/manage_db/manage_firebase_db_bloc.dart';
 import 'package:andes/model/registry.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MainProfile extends StatefulWidget {
   @override
@@ -8,173 +16,200 @@ class MainProfile extends StatefulWidget {
 
 class _MainProfileState extends State<MainProfile> {
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
-  final RegistryData registry = new RegistryData();
+  final User userAuth = FirebaseAuth.instance.currentUser;
+  bool _passwordVisible = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Alterar dados"),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Form(
-            key: formKey,
-            child: Column(children: [
-              usernameTextField(),  // Disabled, but showing the username on field
-              addressTextField(),
-              Column(children: [
-                Text("Selecione seu estado:", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                Row(children: [
-                  Row(children: [stateRadio(1), Text("SP")]),
-                  Row(children: [stateRadio(2), Text("RJ")]),
-                  Row(children: [stateRadio(3), Text("MG")]),
-                  Row(children: [stateRadio(4), Text("ES")]),
-                ]),
-              ]),
-              phoneTextField(),
-              emailTextField(),
-              passwordFormField(),
-              confirmPasswordFormField(),
-              submitButton(),
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget addressTextField() {
-    return TextFormField(
-      keyboardType: TextInputType.streetAddress,
-      initialValue: "endereço X",
-      validator: (String inValue) {
-        return (inValue.length == 0) ? "Insira seu endereco" : null;
-      },
-      onSaved: (String inValue) {
-        registry.address = inValue;
-      },
-      decoration: InputDecoration(
-        hintText: "Endereço",
-        labelText: "Seu endereço",
-      ),
-    );
-  }
-
-  Widget stateRadio(int value) {
-    return Radio(
-        value: value,
-        groupValue: registry.state,
-        onChanged: (int inValue) {
-          setState(() {
-            registry.state = inValue;
-          });
+      appBar: AppBar(title: Text("Profile info (Changeable)")),
+      body: BlocBuilder<ManageFirebaseBloc, ManageState>(
+        builder: (context, state) {
+          return FutureBuilder(
+            future: FirebaseFirestore.instance.collection('users').doc(userAuth.uid).get(),
+            builder: (ctx, snapshot) {
+              Map<String, dynamic> data = snapshot.data.data() as Map<String, dynamic>;
+              BlocProvider.of<ManageFirebaseBloc>(context).add(UpdateRequestUser(
+                  userId: userAuth.uid,
+                  previousUser: RegistryData.fromMap(data)
+              ));
+              RegistryData user = (state is UpdateStateUser) ? state.previousUser : new RegistryData();
+              return SingleChildScrollView(
+                child: Container(
+                  child: Form(
+                    key: formKey,
+                    child: Column(children: [
+                      fullNameTextField(data, user),
+                      addressTextField(data, user),
+                      Column(children: [
+                        Text("Select the state you live in:", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                        Row(children: [
+                          Row(children: [stateRadio(1, data, user), Text("SP")]),
+                          Row(children: [stateRadio(2, data, user), Text("RJ")]),
+                          Row(children: [stateRadio(3, data, user), Text("MG")]),
+                          Row(children: [stateRadio(4, data, user), Text("ES")]),
+                        ]),
+                      ]),
+                      phoneTextField(data, user),
+                      emailTextField(user),
+                      usernameTextField(data, user),
+                      passwordFormField(data, user),
+                      submitButton(context, userAuth.uid, user),
+                    ]),
+                  ),
+                ),
+              );
+            }
+          );
         }
-    );
-  }
-
-  Widget phoneTextField() {
-    return TextFormField(
-      keyboardType: TextInputType.phone,
-      initialValue: "(99)91234-5678",
-      validator: (String inValue) {
-        return (inValue.length == 0) ? "Insira seu número de telefone" : null;
-      },
-      onSaved: (String inValue) {
-        registry.phone = inValue;
-      },
-      decoration: InputDecoration(
-        hintText: "Telefone",
-        labelText: "Seu número de telefone",
       ),
     );
   }
 
-  Widget emailTextField() {
-    return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      initialValue: "email@gmail.com",
-      validator: (String inValue) {
-        return (inValue.length == 0) ? "Insira seu E-mail" : null;
-      },
-      onSaved: (String inValue) {
-        registry.email = inValue;
-      },
-      decoration: InputDecoration(
-        hintText: "E-mail",
-        labelText: "Seu E-mail",
-      ),
-    );
-  }
-
-  Widget usernameTextField() {
+  Widget fullNameTextField(data, user) {
     return TextFormField(
       keyboardType: TextInputType.name,
-      enabled: false,
-      initialValue: "username",
-      decoration: InputDecoration(
-        labelText: "Seu nome de usuário",
-      ),
-    );
-  }
-
-  Widget passwordFormField() {
-    return TextFormField(
-      obscureText: true,
-      validator: (String inValue) {
-        return (inValue.length < 8) ? "Sua senha deve conter pelo menos 8 dígitos" : null;
-      },
+      initialValue: "${data['fullName']}",
+      validator: (String inValue) =>
+      (inValue.length == 0) ? "Insert your full name" : null,
       onSaved: (String inValue) {
-        registry.password = inValue;
+        user.fullName = inValue;
       },
       decoration: InputDecoration(
-        labelText: "Insira uma senha forte",
+        hintText: "John Doe",
+        labelText: "Full name",
       ),
     );
   }
 
-  Widget confirmPasswordFormField() {
+  Widget addressTextField(data, user) {
     return TextFormField(
-      obscureText: true,
-      validator: (String inValue) {
-        return null;
-        return (inValue.length <= 8) ? "Deve conter 8 dígitos" : null;
-        // TODO COMPARE WITH TYPED PASSWORD
-      },
+      keyboardType: TextInputType.streetAddress,
+      initialValue: "${data['address']}",
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Insert your address" : null,
       onSaved: (String inValue) {
-        registry.password = inValue;
+        user.address = inValue;
       },
       decoration: InputDecoration(
-        labelText: "Digite novamente sua senha",
+        hintText: "Street X",
+        labelText: "Address",
       ),
     );
   }
 
-  Widget submitButton() {
+  Widget stateRadio(int value, Map<String, dynamic> data, RegistryData user) {
+    return Radio(
+      value: value,
+      groupValue: user.state,
+      onChanged: (int newValue) {
+        setState(() {
+          user.state = newValue;
+        });
+      }
+    );
+  }
+
+  Widget phoneTextField(data, user) {
+    return TextFormField(
+      keyboardType: TextInputType.phone,
+      initialValue: "${data['phone']}",
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Insert your phone number" : null,
+      onSaved: (String inValue) {
+        user.phone = inValue;
+      },
+      decoration: InputDecoration(
+        hintText: "(99)99999-9999",
+        labelText: "Phone number",
+      ),
+    );
+  }
+
+  Widget emailTextField(user) {
+    return TextFormField(
+      keyboardType: TextInputType.emailAddress,
+      initialValue: "${userAuth.email}",
+      validator: (String inValue)
+        => (inValue.length == 0) ? "Insert your E-mail" : null,
+      onSaved: (String inValue) {
+        user.email = inValue;
+        userAuth.updateEmail(inValue);
+      },
+      decoration: InputDecoration(
+        hintText: "Johndoe@email.com",
+        labelText: "E-mail",
+      ),
+    );
+  }
+
+  Widget usernameTextField(data, user) {
+    return TextFormField(
+      keyboardType: TextInputType.name,
+      initialValue: "${data['username']}",
+      validator: (String inValue)
+      => (inValue.length == 0) ? "Insert your username" : null,
+      onSaved: (String inValue) {
+        user.username = inValue;
+      },
+      decoration: InputDecoration(
+        labelText: "Username",
+      ),
+    );
+  }
+
+  Widget passwordFormField(data, user) {
+    return TextFormField(
+      obscureText: _passwordVisible,
+      validator: (String inValue)
+        => (inValue.length != 0 && inValue.length < 6) ? "Your password must have at least 6 characters" : null,
+      onSaved: (String inValue) {
+        if(inValue.length >= 6) {
+          user.password = inValue;
+          userAuth.updatePassword(inValue);
+        }
+      },
+      decoration: InputDecoration(
+        labelText: "Password",
+        suffixIcon: IconButton(
+          icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off,
+            color: Theme.of(context).primaryColorDark,
+          ),
+          onPressed: () {
+            setState(() {
+              _passwordVisible = !_passwordVisible;
+            });
+          },
+        ),
+      )
+    );
+  }
+
+  Widget submitButton(context, uid, user) {
     return RaisedButton(
-      child: Text("Alterar"),
+      child: Text("Alter info"),
       color: Colors.blue,
       onPressed: () {
         if (formKey.currentState.validate()) {
-          validateRegistry();
+          print(user.username);
+          BlocProvider.of<ManageFirebaseBloc>(context).add(SubmitEventUser(user: user));
+
+          formKey.currentState.save();
+          user.printer();
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          snackBar(context);
         }
       },
     );
   }
 
-  snackBar() {
+  snackBar(context) {
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Dados do suário \"${registry.username}\" alterados com sucesso!"),
-          duration: Duration(seconds: 2),
-        )
+      SnackBar(
+        content: Text("Data successfully altered!"),
+        duration: Duration(seconds: 2)
+      )
     );
-  }
-
-  void validateRegistry() {
-    formKey.currentState.save();
-    registry.printer();
-    Navigator.of(context).pop();
-    snackBar();
   }
 }

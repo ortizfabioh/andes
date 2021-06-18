@@ -14,15 +14,15 @@ class MainRegistry extends StatefulWidget {
 
 class _MainRegistryState extends State<MainRegistry> {
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
-  final RegistryData registry = new RegistryData();
   final RegisterUser authData = new RegisterUser();
+  bool _passwordVisible = true;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ManageFirebaseBloc, ManageState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(title: Text("Cadastro de usuário"),),
+          appBar: AppBar(title: Text("User Registry"),),
           body: SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -30,7 +30,7 @@ class _MainRegistryState extends State<MainRegistry> {
                 fullNameTextField(),
                 addressTextField(),
                 Column(children: [
-                  Text("Selecione seu estado:",
+                  Text("Select the state you live in:",
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
                   ),
                   Row(children: [
@@ -57,13 +57,13 @@ class _MainRegistryState extends State<MainRegistry> {
     return TextFormField(
       keyboardType: TextInputType.name,
       validator: (String inValue) =>
-        (inValue.length == 0) ? "Insira seu nome completo" : null,
+        (inValue.length == 0) ? "Insert your full name" : null,
       onSaved: (String inValue) {
-        registry.fullName = inValue;
+        authData.fullName = inValue;
       },
       decoration: InputDecoration(
-        hintText: "Fulano",
-        labelText: "Seu nome completo",
+        hintText: "John Doe",
+        labelText: "Full name",
       ),
     );
   }
@@ -72,13 +72,13 @@ class _MainRegistryState extends State<MainRegistry> {
     return TextFormField(
       keyboardType: TextInputType.streetAddress,
       validator: (String inValue) =>
-        (inValue.length == 0) ? "Insira um endereco" : null,
+        (inValue.length == 0) ? "Insert your address" : null,
       onSaved: (String inValue) {
-        registry.address = inValue;
+        authData.address = inValue;
       },
       decoration: InputDecoration(
-        hintText: "Rua X",
-        labelText: "Seu endereço",
+        hintText: "X Street",
+        labelText: "Address",
       ),
     );
   }
@@ -86,10 +86,10 @@ class _MainRegistryState extends State<MainRegistry> {
   Widget stateRadio(int value) {
     return Radio(
       value: value,
-      groupValue: registry.state,
+      groupValue: authData.state,
       onChanged: (int inValue) {
         setState(() {
-          registry.state = inValue;
+          authData.state = inValue;
         });
       }
     );
@@ -99,13 +99,13 @@ class _MainRegistryState extends State<MainRegistry> {
     return TextFormField(
       keyboardType: TextInputType.phone,
       validator: (String inValue)
-        => (inValue.length == 0) ? "Insira um número de telefone" : null,
+        => (inValue.length == 0) ? "Insert your phone number" : null,
       onSaved: (String inValue) {
-        registry.phone = inValue;
+        authData.phone = inValue;
       },
       decoration: InputDecoration(
         hintText: "(99)99999-9999",
-        labelText: "Seu número de telefone",
+        labelText: "Phone number",
       ),
     );
   }
@@ -114,14 +114,13 @@ class _MainRegistryState extends State<MainRegistry> {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       validator: (String inValue)
-        => (inValue.length == 0) ? "Insira um E-mail" : null,
+        => (inValue.length == 0) ? "Insert an E-mail" : null,
       onSaved: (String inValue) {
-        registry.email = inValue;
-        authData.username = inValue;
+        authData.email = inValue;
       },
       decoration: InputDecoration(
-        hintText: "fulano@email.com",
-        labelText: "Seu E-mail",
+        hintText: "johndoe@email.com",
+        labelText: "E-mail",
       ),
     );
   }
@@ -130,42 +129,49 @@ class _MainRegistryState extends State<MainRegistry> {
     return TextFormField(
       keyboardType: TextInputType.name,
       validator: (String inValue)
-        => (inValue.length == 0) ? "Insira um nome de usuário" : null,
+        => (inValue.length == 0) ? "Insert an username" : null,
       onSaved: (String inValue) {
-        registry.username = inValue;
+        authData.username = inValue;
       },
       decoration: InputDecoration(
-        labelText: "Seu nome de usuário",
+        labelText: "Username",
       ),
     );
   }
 
   Widget passwordFormField() {
     return TextFormField(
-      obscureText: true,
+      obscureText: _passwordVisible,
       validator: (String inValue)
-        => (inValue.length == 0) ? "Insira uma senha" : null,
+        => (inValue.length < 6) ? "Your password must have at least 6 characters" : null,
       onSaved: (String inValue) {
-        registry.password = inValue;
         authData.password = inValue;
       },
       decoration: InputDecoration(
-        labelText: "Insira uma senha forte",
+        labelText: "Password",
+        suffixIcon: IconButton(
+          icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off,
+            color: Theme.of(context).primaryColorDark,
+          ),
+          onPressed: () {
+            setState(() {
+              _passwordVisible = !_passwordVisible;
+            });
+          },
+        ),
       ),
     );
   }
 
   Widget submitButton(BuildContext context) {
     return RaisedButton(
-      child: Text("Entrar"),
+      child: Text("Register"),
       color: Colors.blue,
       onPressed: () {
         if(formKey.currentState.validate()) {
-          BlocProvider.of<ManageFirebaseBloc>(context).add(SubmitEventUser(user: registry));
           BlocProvider.of<AuthBloc>(context).add(authData);
 
           formKey.currentState.save();
-          registry.printer();
           Navigator.of(context).pop();
           snackBar();
         }
@@ -176,7 +182,7 @@ class _MainRegistryState extends State<MainRegistry> {
   snackBar() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("Usuário \'${registry.username}\' cadastrado com sucesso!"),
+        content: Text("User \'${authData.username}\' successfully registered!"),
         duration: Duration(seconds: 2),
       )
     );

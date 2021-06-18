@@ -8,12 +8,14 @@ class ManageFirebaseBloc extends Bloc<ManageEvent, ManageState> {
 
   @override
   Stream<ManageState> mapEventToState(ManageEvent event) async* {
-    if(event is SubmitEventUser) {
+    if(event is UpdateRequestUser) {
+      yield UpdateStateUser(userId: event.userId, previousUser: event.previousUser);
+    } else if(event is SubmitEventUser) {
       if (state is InsertState) {
         FirebaseRemoteServer.helper.insertUser(event.user);
       } else if(state is UpdateStateUser) {
-        FirebaseRemoteServer.helper.getUserList();
-        yield UpdateStateUser();
+        UpdateStateUser updateState = state;
+        FirebaseRemoteServer.helper.updateUser(updateState.userId, event.user);
       }
     }
   }

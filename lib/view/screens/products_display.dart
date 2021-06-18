@@ -74,7 +74,7 @@ class MainProducts extends StatelessWidget {
         Text("${product.name}",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 35),
         ),
-        Text("Por \$${product.price}",
+        Text("\$ ${product.price}",
           style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         Divider(),
@@ -82,7 +82,7 @@ class MainProducts extends StatelessWidget {
           style: TextStyle(color: Colors.black, fontSize: 20),
         ),
         ElevatedButton(
-          child: Text("Adicionar ao carrinho"),
+          child: Text("Add to Cart"),
           onPressed: () {
             if(state is Authenticated) {
               snackBar(context);
@@ -99,7 +99,7 @@ class MainProducts extends StatelessWidget {
   snackBar(context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("Adicionado ao carrinho"),
+        content: Text("Added to your Shopping cart!"),
         duration: Duration(milliseconds: 500)
       )
     );
@@ -111,7 +111,7 @@ class MainProducts extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Você precisa se logar antes"),
+          title: Text("You need to log in first"),
           actions: [
             TextButton(
               child: Text("Ok"),

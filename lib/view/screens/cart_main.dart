@@ -1,6 +1,5 @@
 import 'package:andes/logic/manage_db/manage_db_event.dart';
 import 'package:andes/logic/manage_db/manage_local_db_bloc.dart';
-import 'package:andes/logic/monitor_db/monitor_db_bloc.dart';
 import 'package:andes/logic/monitor_db/monitor_db_state.dart';
 import 'package:andes/logic/monitor_db/monitor_local_db_bloc.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,7 @@ class _MainCartState extends State<MainCart> {
   Widget listView(productList, idList) {
     if(productList.length == 0) {
       return Container(
-        child: Text("Não há produtos no carrinho no momento",
+        child: Text("There are no items in your cart at the moment",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 30),
           textAlign: TextAlign.center,
         ),
@@ -68,11 +67,11 @@ class _MainCartState extends State<MainCart> {
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Row(children: [
-              Text("Total: $total  ",
+              Text("Total: \$$total.00  ",
                 style: (TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 26)),
               ),
               RaisedButton(
-                child: Text("Finalizar compra"),
+                child: Text("Proceed to payment"),
                 color: Colors.green,
                 onPressed: () {
                   snackBar(context);
@@ -90,7 +89,7 @@ class _MainCartState extends State<MainCart> {
 
   snackBar(context) {
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Vendido!"), duration: Duration(seconds: 2))
+        SnackBar(content: Text("Sold!"), duration: Duration(seconds: 2))
     );
   }
 }

@@ -3,12 +3,17 @@ import 'package:andes/model/user.dart';
 abstract class AuthEvent {}
 
 class RegisterUser extends AuthEvent {
-  String username;
+  String email;
   String password;
+  String fullName;
+  String address;
+  int state;
+  String phone;
+  String username;
 }
 
 class LoginUser extends AuthEvent {
-  String username;
+  String email;
   String password;
 }
 
